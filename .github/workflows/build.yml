@@ -1,32 +1,70 @@
-[app]
+name: Build Android APK
 
-# (str) Title of your application
-title = MT5 Copier Dashboard
+on:
+  push:
+    branches: [ main, master ]
 
-# (str) Package name
-package.name = mt5copier
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-# (str) Package domain (needed for android packaging)
-package.domain = org.mt5copier
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
 
-# (list) Source files to include (let it empty to include all files)
-source.include_exts = py,png,jpg,kv,atlas,json
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
 
-# (list) Application requirements
-# Tambahkan library python yang Anda gunakan di main.py di sini (contoh: kivy, requests, dll)
-requirements = python3,kivy
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          python3-pip \
+          build-essential \
+          git \
+          python3-dev \
+          ffmpeg \
+          libsdl2-dev \
+          libsdl2-image-dev \
+          libsdl2-mixer-dev \
+          libsdl2-ttf-dev \
+          libportmidi-dev \
+          libswscale-dev \
+          libavformat-dev \
+          libavcodec-dev \
+          zlib1g-dev \
+          libgstreamer1.0-dev \
+          gstreamer1.0-plugins-base \
+          gstreamer1.0-plugins-good \
+          gstreamer1.0-plugins-bad \
+          unzip \
+          zip \
+          autoconf \
+          libtool \
+          pkg-config \
+          libncurses5-dev \
+          libncursesw5-dev \
+          libstdc++6 \
+          libglu1-mesa-dev \
+          openjdk-17-jdk \
+          ant \
+          autoconf \
+          automake \
+          libltdl-dev
 
-# (str) Supported orientations
-orientation = portrait
+    - name: Install Buildozer & Cython
+      run: |
+        pip install --upgrade pip
+        pip install cython==0.29.36 buildozer
 
-# (list) Permissions
-permissions = INTERNET
+    - name: Build with Buildozer
+      run: |
+        buildozer -v android debug
 
-# (int) Target Android API, should be as high as possible.
-android.api = 33
-
-# (int) Minimum API your APK will support.
-android.minapi = 21
-
-# (bool) Indicate whether the application should be fullscreen or not
-fullscreen = 0
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: mt5-copier-apk
+        path: bin/*.apk
