@@ -1,38 +1,31 @@
-# -*- mode: python ; coding: utf-8 -*-
+[app]
 
+# (str) Title of your application
+title = MT5 Copier Dashboard
 
-a = Analysis(
-    ['app.py'],
-    pathex=[],
-    binaries=[],
-    datas=[],
-    hiddenimports=[],
-    hookspath=[],
-    hooksconfig={},
-    runtime_hooks=[],
-    excludes=[],
-    noarchive=False,
-    optimize=0,
-)
-pyz = PYZ(a.pure)
+# (str) Package name
+package.name = mt5copier
 
-exe = EXE(
-    pyz,
-    a.scripts,
-    a.binaries,
-    a.datas,
-    [],
-    name='app',
-    debug=False,
-    bootloader_ignore_signals=False,
-    strip=False,
-    upx=True,
-    upx_exclude=[],
-    runtime_tmpdir=None,
-    console=False,
-    disable_windowed_traceback=False,
-    argv_emulation=False,
-    target_arch=None,
-    codesign_identity=None,
-    entitlements_file=None,
-)
+# (str) Package domain (needed for android packaging)
+package.domain = org.mt5copier
+
+# (list) Source files to include (let it empty to include all files)
+source.include_exts = py,png,jpg,kv,atlas,json
+
+# (list) Application requirements
+requirements = python3,kivy
+
+# (str) Supported orientations
+orientation = portrait
+
+# (list) Permissions
+permissions = INTERNET
+
+# (int) Target Android API
+android.api = 33
+
+# (int) Minimum API your APK will support
+android.minapi = 21
+
+# (bool) Indicate whether the application should be fullscreen or not
+fullscreen = 0
